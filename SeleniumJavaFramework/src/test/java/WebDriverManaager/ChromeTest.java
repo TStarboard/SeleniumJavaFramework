@@ -11,21 +11,24 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import junit.framework.Assert;
 
 public class ChromeTest {
 
-	private WebDriver driver;
+	private static WebDriver driver;
 	
 	@BeforeClass
 	public static void setupClass(){
 		WebDriverManager.chromedriver().setup();
-		
+		driver = new ChromeDriver();
+		/*System.setProperty("webdriver.chrome.driver", "C:/Users/tswon/git/SeleniumJavaFramework/SeleniumJavaFramework/drivers/chromedriver.exe");
+		WebDriver driver = new ChromeDriver();*/
 	}
 	
-	@BeforeClass
+	/*@BeforeClass
 	public void setupTest(){
 		driver = new ChromeDriver();
-	}
+	}*/
 	
 	@AfterClass
 	public void teardown(){
@@ -35,19 +38,27 @@ public class ChromeTest {
 	}
 	
 	@Test
-	public void test(){
+	public void test() throws InterruptedException{
 		
-		driver.manage().window().maximize();
-		driver.get("https://google.com");
+		//driver.manage().window().maximize();
+		driver.get("https://www.kink.com");
+		driver.findElement(By.xpath("//button[@class='cta-button everything']")).click();
 		String title = driver.getTitle();
 		System.out.println(title);
-		driver.findElement(By.xpath("//input[@name='q']")).sendKeys("Automation Step by Step");
-		driver.findElement(By.xpath("//div[@class='FPdoLc VlcLAe']//input[@name='btnK']")).sendKeys(Keys.RETURN);;
-		driver.findElement(By.xpath("//div[@class='bkWMgd']//div[2]//div[1]//div[1]//div[1]//a[1]//h3[1]"));
+		driver.findElement(By.xpath("//a[@id='kBarLogin']")).click();
+		Thread.sleep(5000);
+		driver.findElement(By.xpath("//input[@id='usernameLoginPopup']")).sendKeys("kink1@fake.com");
+		driver.findElement(By.xpath("//input[@id='passwordLoginPopup']")).sendKeys("fake");
+		driver.findElement(By.xpath("//button[@id='loginFromPopup']")).sendKeys(Keys.RETURN);
+		Thread.sleep(5000);
+		String actual_error = driver.findElement(By.xpath("//span[@class='icon-attention']")).getText();
+		Thread.sleep(5000);
+		String expected_error = "Bad username or password";
+		System.out.println(actual_error);
+		Assert.assertEquals(actual_error, expected_error);
 		String title2 = driver.getTitle();
 		System.out.println(title2);
-		
-		driver.quit();
+				
 		
 	}
 	
